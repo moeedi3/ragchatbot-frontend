@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, Trash2, Calendar, FileType } from "lucide-react";
@@ -12,7 +13,10 @@ interface Props {
 }
 
 export default function DocumentCard({ document }: Props) {
-    const deleteMutation = useDeleteDocument();
+    const [open, setOpen] = useState(false);
+    const deleteMutation = useDeleteDocument({
+        onSuccess: () => setOpen(false),
+    });
 
     const formattedDate = new Date(document.uploaded_at).toLocaleString(undefined, {
         dateStyle: "medium",
@@ -46,9 +50,12 @@ export default function DocumentCard({ document }: Props) {
                 </div>
 
                 <ConfirmDialog
+                    open={open}
+                    onOpenChange={setOpen}
                     title="Delete Document"
                     description="Are you sure you want to permanently delete this document from the knowledge base? This action cannot be undone."
                     onConfirm={() => deleteMutation.mutate(document.id)}
+                    isPending={deleteMutation.isPending}
                     trigger={
                         <Button
                             variant="ghost"

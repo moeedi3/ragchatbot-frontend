@@ -4,7 +4,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteDocument } from "@/services/document.service";
 import { toast } from "sonner";
 
-export function useDeleteDocument() {
+interface UseDeleteDocumentOptions {
+    onSuccess?: () => void;
+}
+
+export function useDeleteDocument(options?: UseDeleteDocumentOptions) {
 
     const queryClient = useQueryClient();
 
@@ -23,6 +27,8 @@ export function useDeleteDocument() {
                 queryKey: ["documents"]
 
             });
+
+            options?.onSuccess?.();
 
         },
 

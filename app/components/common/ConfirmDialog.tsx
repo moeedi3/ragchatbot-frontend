@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2 } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -22,6 +23,12 @@ interface ConfirmDialogProps {
 
     onConfirm: () => void;
 
+    open: boolean;
+
+    onOpenChange: (open: boolean) => void;
+
+    isPending?: boolean;
+
 }
 
 export default function ConfirmDialog({
@@ -34,11 +41,17 @@ export default function ConfirmDialog({
 
     onConfirm,
 
+    open,
+
+    onOpenChange,
+
+    isPending = false,
+
 }: ConfirmDialogProps) {
 
     return (
 
-        <AlertDialog>
+        <AlertDialog open={open} onOpenChange={onOpenChange}>
 
             <AlertDialogTrigger render={trigger} />
 
@@ -70,9 +83,17 @@ export default function ConfirmDialog({
 
                     <AlertDialogAction
                         onClick={onConfirm}
+                        disabled={isPending}
                     >
 
-                        Delete
+                        {isPending ? (
+                            <>
+                                <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                                Deleting...
+                            </>
+                        ) : (
+                            "Delete"
+                        )}
 
                     </AlertDialogAction>
 
